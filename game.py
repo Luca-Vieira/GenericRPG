@@ -1,107 +1,122 @@
 import random
 
 class Attributes:
-    def __init__(self, name, maxHealth, maxMana, damage, critPercentage, maxDefense, skill, level, evasion):
+    def __init__(self, name):
         self.name = name
-        self.maxHealth = maxHealth
-        self.maxMana = maxMana
-        self.damage = damage
-        self.critPercentage = critPercentage
-        self.maxDefense = maxDefense
-        self.skill = skill
-        self.level = level
-        self.evasion = evasion
-
-class Enemy(Attributes):
-    def __init__(self, name, health, maxHealth, mana, maxMana, damage, critPercentage, defense, maxDefense, level, skill, evasion, isAlive):
-        super().__init__(name, maxHealth, maxMana, damage, critPercentage, maxDefense, skill, level, evasion)
-        self.health = health
-        self.mana = mana
-        self.defense = defense
-        self.skills = skill
-        self.isAlive = isAlive
+        self.maxHealth = 0
+        self.maxMana = 0
+        self.damage = 0
+        self.critPercentage = 0
+        self.maxDefense = 0
+        self.level = 1
+        self.evasion = 0
+        self.luck = 0
+        self.health = 0
+        self.mana = 0
+        self.defense = 0
+        self.isAlive = True
+        self.equipment = []
+        self.items = []
     
-    def basicEnemyAttack(self, player):
+    def setStatus(self):
+        self.maxHealth = random.randint(100, 120)
+        self.health = self.maxHealth
+        self.maxMana = random.randint(30, 50)
+        self.mana = self.maxMana
+        self.damage = random.randint(20, 30)
+        self.critPercentage = random.randint(100, 110) / 100
+        self.luck = random.randint(100, 110) / 100
+        self.maxDefense = random.randint(50, 70)
+        self.defense = self.maxDefense
+        self.evasion = random.randint(100, 110) / 100
+    
+    def mostrar_atributos(self):
+        for atributo, valor in self.__dict__.items():
+            print(f"{atributo}: {valor}")
+    
+    def basicAttack(self, enemy):
         trueDamage = self.damage
         print("=------------------------------------------------------------=")
-        print("The monster attacks you.")
-        if player.evasion >= random.randint(100,200)/100:
-            print("+------------------------------------------------------------+")
-            return print("The monster missed.\n")
-        if self.critPercentage  > random.randint(100,200)/100:
-           trueDamage = trueDamage * self.critPercentage
-           print("+------------------------------------------------------------+")
-           print("You received critical damage.")
-        player.defense = player.defense - trueDamage
-        if player.defense >= 0:
-            print("+------------------------------------------------------------+")
-            return print(f"Your health: {player.health}/{player.maxHealth}\nYour Defense:  {player.defense}/{player.maxDefense}\n")
-        else:
-            player.health = player.health + player.defense
-            player.defense = 0
-            if player.health <= 0:
-                player.isAlive = False
-                print("+------------------------------------------------------------+")
-                return print(f"You are dead.\n+------------------------------------------------------------+\nYour health: 0/{player.maxHealth}\nYour Defense:  {player.defense}/{player.maxDefense}\n")
-            else:
-                print("+------------------------------------------------------------+")
-                return  print(f"Your health: {player.health}/{player.maxHealth}\nYour Defense:  {player.defense}/{player.maxDefense}\n")
-
-    
-class Player(Attributes):
-    def __init__(self, name, health, maxHealth, mana, maxMana, damage, critPercentage, luck, defense, maxDefense, level, class_, equipment, skill, evasion, isAlive):
-        super().__init__(name, maxHealth, maxMana, damage, critPercentage, maxDefense, skill, level, evasion)
-        self.class_ = class_
-        self.health = health
-        self.mana = mana
-        self.luck = luck
-        self.defense = defense
-        self.equipment = equipment
-        self.isAlive = isAlive
-
-    def basicPlayerAttack(self, enemy: Enemy):
-        trueDamage = self.damage
-        print("=------------------------------------------------------------=")
-        print("You attack the monster.")
+        print(f"{self.name} attacks {enemy.name}.")
         if enemy.evasion >= random.randint(100,200)/100:
             print("+------------------------------------------------------------+")
-            return print("You Missed\n")
+            return print(f"{self.name} Missed.\n")
         if self.luck  > random.randint(100,200)/100:
            trueDamage = self.damage * self.luck 
            print("+------------------------------------------------------------+")
-           print("The luck is on your side")
+           print(f"The luck is on {self.name}'s side.")
         if self.critPercentage  > random.randint(100,200)/100:
            trueDamage = trueDamage * self.critPercentage
            print("+------------------------------------------------------------+")
-           print("You got a critical hit")
+           print(f"{self.name} did critical Damage.")
         enemy.defense = enemy.defense - trueDamage
         if enemy.defense >= 0:
             print("+------------------------------------------------------------+")
-            return print(f"Enemy Health: {enemy.health}/{enemy.maxHealth}\nEnemy Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+            return print(f"{enemy.name}'s Health: {enemy.health}/{enemy.maxHealth}\n{enemy.name}'s Defense:  {enemy.defense}/{enemy.maxDefense}\n")
         else:
             enemy.health = enemy.health + enemy.defense
             enemy.defense = 0
             if enemy.health <= 0:
                 enemy.isAlive = False
                 print("+------------------------------------------------------------+")
-                return print(f"The enemy is dead.\n+------------------------------------------------------------+\nEnemy Health: 0/{enemy.maxHealth}\nEnemy Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+                return print(f"{enemy.name} is dead.\n+------------------------------------------------------------+\n{enemy.name}'s Health: 0/{enemy.maxHealth}\n{enemy.name}'s Defense:  {enemy.defense}/{enemy.maxDefense}\n")
             else:
                 print("+------------------------------------------------------------+")
-                return  print(f"Enemy Health: {enemy.health}/{enemy.maxHealth}\nEnemy Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+                return  print(f"{enemy.name}'s Health: {enemy.health}/{enemy.maxHealth}\n{enemy.name}'s Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+
+class Warrior(Attributes):
+
+    def infusedSword(self,enemy):
+        self.mana -= 15
+        trueDamage = self.damage + (20 * self.level)
+        print("=------------------------------------------------------------=")
+        print(f"{self.name} attacks {enemy.name} with an infused blade.")
+        if enemy.evasion >= random.randint(100,200)/100:
+            print("+------------------------------------------------------------+")
+            return print(f"{self.name} Missed.\n")
+        if self.luck  > random.randint(100,200)/100:
+           trueDamage = self.damage * self.luck 
+           print("+------------------------------------------------------------+")
+           print(f"The luck is on {self.name}'s side.")
+        if self.critPercentage  > random.randint(100,200)/100:
+           trueDamage = trueDamage * self.critPercentage
+           print("+------------------------------------------------------------+")
+           print(f"{self.name} did critical Damage.")
+        enemy.defense = enemy.defense - trueDamage
+        if enemy.defense >= 0:
+            print("+------------------------------------------------------------+")
+            return print(f"{enemy.name}'s Health: {enemy.health}/{enemy.maxHealth}\n{enemy.name}'s Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+        else:
+            enemy.health = enemy.health + enemy.defense
+            enemy.defense = 0
+            if enemy.health <= 0:
+                enemy.isAlive = False
+                print("+------------------------------------------------------------+")
+                return print(f"{enemy.name} is dead.\n+------------------------------------------------------------+\n{enemy.name}'s Health: 0/{enemy.maxHealth}\n{enemy.name}'s Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+            else:
+                print("+------------------------------------------------------------+")
+                return  print(f"{enemy.name}'s Health: {enemy.health}/{enemy.maxHealth}\n{enemy.name}'s Defense:  {enemy.defense}/{enemy.maxDefense}\n")
+        
+
+    
+            
         
         
                    
 
 
 if __name__ == "__main__":
-    player = Player("carlos",100,100,100,100,50,1.4,1.11,50,50,1,"Guerreiro",[],[],1.1, True)
-    inimigo = Enemy("goblin", 100, 100, 100, 100, 50, 1.4, 50, 50, 1, [], 1.1, True)
+    guerreiro1 = Warrior("Carlos stri")
+    guerreiro1.setStatus()
+    guerreiro2 = Warrior("JP")
+    guerreiro2.setStatus()
     
-    
-    while player.isAlive and inimigo.isAlive:
-        if player.isAlive:    
-            player.basicPlayerAttack(inimigo)
-        if inimigo.isAlive:
-            inimigo.basicEnemyAttack(player)
+    while guerreiro1.isAlive and guerreiro2.isAlive:
+        if guerreiro1.isAlive:    
+            guerreiro1.infusedSword(guerreiro2)
+        if guerreiro2.isAlive:
+            guerreiro2.infusedSword(guerreiro1)
+            
+
             
     
